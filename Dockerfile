@@ -45,7 +45,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/scripts ./scripts
 
-RUN yarn add npm-run-all@4.1.5 dotenv@10.0.0 prisma@5.22.0 @prisma/client@5.22.0 patch-package@8.0.1
+RUN yarn add npm-run-all@4.1.5 dotenv@10.0.0 prisma@5.22.0 @prisma/client@5.22.0 @prisma/extension-read-replicas@0.3.0 patch-package@8.0.1
 RUN yarn prisma generate --schema=./prisma/schema.prisma
 
 # Automatically leverage output traces to reduce image size

@@ -44,7 +44,21 @@ async function checkConnection() {
 
     success('Database connection successful.');
   } catch (e) {
-    throw new Error('Unable to connect to the database.');
+    const parts = ['Unable to connect to the database.'];
+
+    if (e?.code) {
+      parts.push(`code=${e.code}`);
+    }
+
+    if (e?.message) {
+      parts.push(`message=${e.message}`);
+    }
+
+    if (e?.meta) {
+      parts.push(`meta=${JSON.stringify(e.meta)}`);
+    }
+
+    throw new Error(parts.join(' '));
   }
 }
 

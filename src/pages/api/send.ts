@@ -7,7 +7,7 @@ import { getIpAddress } from 'lib/detect';
 import { useCors, useSession, useValidate } from 'lib/middleware';
 import { CollectionType, YupRequest } from 'lib/types';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { badRequest, createToken, forbidden, methodNotAllowed, ok, send } from 'next-basics';
+import { badRequest, createToken, forbidden, methodNotAllowed, ok } from 'next-basics';
 import { saveEvent, saveSessionData } from 'queries';
 import * as yup from 'yup';
 
@@ -138,7 +138,7 @@ export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
 
     const token = createToken(session, secret());
 
-    return send(res, token);
+    return res.status(200).send(token);
   }
 
   return methodNotAllowed(res);

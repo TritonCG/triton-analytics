@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 require('dotenv').config();
+
+if (typeof Buffer !== 'undefined' && typeof Buffer.SlowBuffer === 'undefined') {
+  Buffer.SlowBuffer = Buffer;
+}
 const path = require('path');
 const pkg = require('./package.json');
 
@@ -76,12 +80,12 @@ if (process.env.CLOUD_MODE && process.env.CLOUD_URL && process.env.DISABLE_LOGIN
 
 const config = {
   env: {
-    cloudMode: process.env.CLOUD_MODE,
-    cloudUrl: process.env.CLOUD_URL,
+    cloudMode: process.env.CLOUD_MODE ? '1' : '',
+    cloudUrl: process.env.CLOUD_URL ?? '',
     configUrl: '/config',
     currentVersion: pkg.version,
-    defaultLocale: process.env.DEFAULT_LOCALE,
-    isProduction: process.env.NODE_ENV === 'production',
+    defaultLocale: process.env.DEFAULT_LOCALE ?? 'en-US',
+    isProduction: process.env.NODE_ENV === 'production' ? 'true' : 'false',
   },
   basePath: process.env.BASE_PATH,
   output: 'standalone',

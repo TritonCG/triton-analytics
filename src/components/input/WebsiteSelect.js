@@ -6,10 +6,36 @@ import useMessages from 'components/hooks/useMessages';
 export function WebsiteSelect({ websiteId, onSelect }) {
   const { formatMessage, labels } = useMessages();
   const { get, useQuery } = useApi();
-  const { data } = useQuery(['websites:me'], () => get('/me/websites'));
+  const { data } = useQuery(['websites:me:all'], async () => {
+    const pageSize = 200;
+    let page = 1;
+    const allWebsites = [];
+
+    while (page) {
+      const result = await get('/me/websites', { includeTeams: 1, page, pageSize });
+      const currentPage = result?.data || [];
+      const totalCount = result?.count;
+
+      allWebsites.push(...currentPage);
+
+      if (
+        currentPage.length < pageSize ||
+        (typeof totalCount === 'number' && allWebsites.length >= totalCount)
+      ) {
+        page = 0;
+      } else {
+        page += 1;
+      }
+    }
+
+    return {
+      data: allWebsites,
+      count: allWebsites.length,
+    };
+  });
   const [filter, setFilter] = useState('');
 
-  const websites = data?.data || [];
+  const websites = useMemo(() => data?.data || [], [data]);
   const items = useMemo(() => {
     if (!filter) {
       return websites;
